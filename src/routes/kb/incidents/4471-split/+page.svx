@@ -21,13 +21,21 @@ signature: m-kolomanski
 </script>
 
 The [#4471 page](/kb/incidents/4471) says one issue with one fix queued. Its own table says
-otherwise, and the report bodies say more. Every report merged into #4471 belongs to exactly one
+otherwise, and the report bodies say more. Counts come from the export of 4 October. Every report merged into #4471 belongs to exactly one
 of the problems below. Each has its own ticket.
 
 <Callout kind="warn">
-Not one issue. The queued parser fix will not close the form-hint reports or the one-day moves.
-Keep #4471 open until all three tickets are closed.
+Not one issue. #4471 closed on 5 October with two verdicts: <code>parser</code> fixed
+(<code>fix(dates): parse dd/mm for eu locales</code>), <code>hint</code> won't fix
+(<code>booking-v3</code> form retired).
+Nobody ruled on the one-day moves. That ticket stays open.
 </Callout>
+
+| problem | engineering, 5 Oct | ticket |
+| --- | --- | --- |
+| `parser` | fixed: `fix(dates): parse dd/mm for eu locales` | closed, completed |
+| `hint` | won't fix: `booking-v3` form retired | closed, not planned |
+| `one-day-move` | no verdict | **open** |
 
 ## The split
 
@@ -36,19 +44,20 @@ Keep #4471 open until all three tickets are closed.
 ## The three problems
 
 **`parser`: the shared parser reads every date month first.** Our tenants all write the day
-first, so in the app, by email and through `booking-v2` forms, 7 April comes out as 4 July. This is
-the fix already queued.
+first, so in the app, by email and through `booking-v2` forms, 7 April comes out as 4 July. Fixed
+on 5 October. The desk view counts 379 reports here: the 374 above plus the 5 one-day moves it
+files under `parser` by tenant.
 
 **`hint`: the `booking-v3` form tells people to type month first.** Its date field shows
 `MM/DD/YYYY`, people follow it, and the form then reads their date day first. The parser
-fix does not touch this: the hint or the form's reading has to change. Only form reports from
+fix does not touch this. Won't fix: the `booking-v3` form is retired. Only form reports from
 `booking-v3` tenants land here. Intake tags these by the reporter's browser, so its `hint` tag
 and this group disagree; this group follows the tenant (`causes.ts`).
 
 **`one-day-move`: the date moves by one day, not month for day.** "Invite says Tuesday 12 May.
 Calendar says Monday 11 May." A client in Lisbon and one in Toronto got different days for one
 meeting; an invite arrived before the booking was made. That is a time zone or midnight
-conversion bug, not a parser one. The desk noted these reports (`desk-notes.json`) but
+conversion bug, not a parser one, and the parser fix leaves it in place. Still open. The desk noted these reports (`desk-notes.json`) but
 [CauseTable](/kb/incidents/4471) still counts them under `parser` by tenant, so they vanish
 from view.
 
